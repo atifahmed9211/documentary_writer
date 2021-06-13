@@ -62,11 +62,11 @@
           </tr>
         </thead>
         <tbody id="script-table">
-          <!-- <tr>
+          <tr id="select_script_file">
             <td contenteditable='true'>01</td>
             <td contenteditable="true" class="input"></td>
             <td contenteditable='true'></td>
-          </tr> -->
+          </tr>
         </tbody>
       </table>
     </div>
@@ -456,21 +456,26 @@ function addAct(act){
 <script src="{% static 'js/script.js' %}"></script>
 <script>
   $(document).ready(function(){
-    //display data from json file
-    $.ajax({
-      url:'/script/',
-      type:'get',
-      data:{
-      },
-      success:function(data){
-        var output;
-        var actRow;
-        a=data.obj1;
-        b=data.obj2;
-        c=data.obj3;
-        d=data.obj4;
-        var objects=[a,b,c,d]
-        //for act1,act2,act3, act4
+    $("#script_file_button").on('change',function(){
+      var formdata=new FormData();
+      formdata.append("scriptFile",$("#script_file_button")[0].files[0])
+      formdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+      //display data from json file
+      $.ajax({
+        url:'/script/',
+        type:'post',
+        processData:false,
+        contentType:false,
+        data:formdata,
+        success:function(data){
+            var output;
+            var actRow;
+            a=data.obj1;
+            b=data.obj2;
+            c=data.obj3;
+            d=data.obj4;
+            var objects=[a,b,c,d]
+            //for act1,act2,act3, act4
         for(i=0;i<objects.length;i++)
         {
           current_act=objects[i]
@@ -516,6 +521,7 @@ function addAct(act){
                            "</p></td></tr>";
               }
           }
+          $("#select_script_file").hide();
           total_output=actRow+=output;
           $('#script-table').append(total_output);
           output=0;
@@ -527,6 +533,7 @@ function addAct(act){
       },
     });
   });
+});
   //press tab to add a new row or double tab to add a new to table
   var tabClick=0;
   $('#table').on('focus', 'tr:last #lastTD', function(){

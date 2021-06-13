@@ -116,7 +116,10 @@ table, th, td {
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">files <span class="sr-only"></span></a>
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" id="script_file_button" name="scriptFile" class="nav-link">
+          </form>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">about</a>
