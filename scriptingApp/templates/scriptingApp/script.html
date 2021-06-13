@@ -1,0 +1,580 @@
+{% extends 'scriptingApp/main.html' %}
+
+{% block content %}
+{% load static %}
+<style>
+
+  /* #input {
+      background: transparent;
+      outline: none;
+      border: 1px solid grey;
+      z-index: 10;
+      width: 582px;
+      height: 44px;
+      font-size: 25px;
+      border-radius: 20px;
+      padding-left: 20px;
+      padding-top: 10px;
+      margin-top: 35%;
+  } */
+
+  /* .div {
+      width: auto;
+      display: inline-block;
+      visibility: hidden;
+      position: fixed;
+      overflow: auto;
+      font-size: 25px;
+  }
+
+  #time {
+    font-style: italic;
+    font-size: 13px;
+    margin-left: 20px;
+    text-decoration: underline;
+    letter-spacing: 0.5px; */
+  /* } */
+</style>
+<div class="gradient-border" id="box">
+    <h1 contenteditable='true' style="left: 19px; top: 10px; position: absolute;">Shooting Script</h1>
+    <h5 style="left: 19px; top: 63px; position: absolute; color: #afafaf;">Project Title: </h5>
+    <h5 contenteditable='true' style="left: 127px; top: 63px; position: absolute; color: #afafaf;">My Documentry</h5>
+    <h5 style="left: 19px; top: 83px; position: absolute; color: #afafaf;">Duration:</h5>
+    <h5 contenteditable='true' style="left: 101px; top: 83px; position: absolute; color: #afafaf;">1 Hour</h5>
+    <h5 style="left: 19px; top: 105px; position: absolute; color: #afafaf;">TX Date: </h5>
+    <h5 contenteditable='true' style="left: 91px; top: 105px; position: absolute; color: #afafaf;">1 Jan 2021</h5>
+    <div style="position:absolute;top: 30px;right:10px" >
+      <button id="csv" class="btn btn-danger">To CSV</button>
+      <!--<button id="json" class="btn btn-success">To JSON</button>-->
+      <button id="pdf" class="btn btn-info">To PDF</button>
+      <!--<button id="txt" class="btn btn-primary">To TXT</button>-->
+    </div>
+    <div id="act">
+    <h4 style="left: 19px; top: 152px; position: absolute; color:white; font-weight: bolder;" id="actNo">Act </h4>
+    <h4 contenteditable='true' style="left: 61px; top: 152px; position: absolute; color:white; font-weight: bolder;">1</h4>
+    <div id="table-div" class="form">
+      <table id="table" style="width: 94%; top: 184px; position: absolute; left: 20px;">
+        <thead>
+          <tr>
+            <th>NO.</th>
+            <th>MEDIA</th>
+            <th>SCRIPT</th>
+          </tr>
+        </thead>
+        <tbody id="script-table">
+          <!-- <tr>
+            <td contenteditable='true'>01</td>
+            <td contenteditable="true" class="input"></td>
+            <td contenteditable='true'></td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+<!-- <script type="text/javascript" src="{% static 'script.js' %}" ></script> -->
+<script>
+
+const $input = document.getElementById('input');
+const $time = document.getElementById('time');
+const $fakeDiv = document.getElementById('fake-div');
+const r = $input.getBoundingClientRect();
+let INPUT_DEBOUNCE = null;
+
+const $span = document.createElement('span');
+
+const css = getComputedStyle($input);
+
+$span.style.cssText = `
+    width: ${r.width}px;
+    height: ${r.height}px;
+    color: white;
+    left: ${r.left}px;
+    top: ${r.top}px;
+    z-index: -10;
+    opacity: 0.4;
+    position: absolute;
+    white-space: pre-wrap;
+    font-size: ${parseInt(css.fontSize)}px;
+    padding-left: ${parseInt(css.paddingLeft)}px;
+    padding-top: ${parseInt(css.paddingTop) + 1}px;
+`;
+
+document.body.appendChild($span);
+
+class Trie {
+  constructor() {
+    this.trie = null;
+    this.suggestions = [];
+  }
+
+  newNode() {
+    return {
+      isLeaf: false,
+      children: {}
+    }
+  }
+
+  add(word) {
+    if (!this.trie) this.trie = this.newNode();
+
+    let root = this.trie;
+    for (const letter of word) {
+      if (!(letter in root.children)) {
+        root.children[letter] = this.newNode();
+      }
+      root = root.children[letter];
+    }
+    root.isLeaf = true;
+  }
+
+  find(word) {
+    let root = this.trie;
+    for (const letter of word) {
+      if (letter in root.children) {
+        root = root.children[letter];
+      } else {
+        return null;
+      }
+    }
+
+    return root;
+  }
+
+  traverse(root, word) {
+    if (root.isLeaf) {
+      this.suggestions.push(word);
+      return;
+    }
+
+    for (const letter in root.children) {
+      this.traverse(root.children[letter], word + letter);
+    }
+  }
+
+  complete(word, CHILDREN = null) {
+    const root = this.find(word);
+
+    if (!root) return this.suggestions; // cannot suggest anything
+
+    const children = root.children;
+
+    let spread = 0;
+
+    for (const letter in children) {
+      this.traverse(children[letter], word + letter);
+      spread++;
+
+      if (CHILDREN && spread === CHILDREN) break;
+    }
+
+    return this.suggestions;
+  }
+
+  clear() {
+    this.suggestions = [];
+  }
+
+  print() {
+    console.log(this.trie);
+  }
+}
+
+// const getData = async () => {
+//   const url = 'https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/master/dictionary_compact.json';
+//   const res = await fetch(url, {
+//     method: 'GET'
+//   });
+
+//   return await res.json();
+// }
+
+// const getPopular = async () => {
+//   const url = 'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-no-swears.txt';
+
+//   const res = await fetch(url, {
+//     method: 'GET'
+//   });
+
+//   let text = await res.text();
+
+//   const popular = {};
+
+//   text = text.split('\n');
+
+//   const TOTAL = text.length;
+
+//   text.forEach((word, freq) => {
+//     if (word !== '') {
+//       popular[word.toLowerCase()] = TOTAL - freq;
+//     }
+//   });
+
+//   return popular;
+// }
+
+let data = {"DESCRIPTION":10, "MEDIA":10, "PICTURE":10},
+  words = null,
+  trie = null,
+  popular = {"DESCRIPTION":10, "MEDIA":10, "PICTURE":10};
+let rest = null,
+  suggestion = null;
+
+const init = async () => {
+  console.log("GETTING DATA");
+  $input.style.cursor = 'not-allowed';
+
+//   data = await getData();
+//   popular = await getPopular();
+
+  words = Object.keys(data).sort();
+
+  trie = new Trie();
+
+  words.forEach(word => trie.add(word.toUpperCase()));
+
+  $input.style.cursor = 'auto';
+
+  console.log("INITIALIZED");
+}
+
+const getBestMatch = (suggestions) => {
+  let bestMatch = null,
+    bestScore = -100;
+  for (const suggestion of suggestions) {
+    if (suggestion in popular && popular[suggestion] > bestScore) {
+      bestMatch = suggestion;
+      bestScore = popular[suggestion];
+    }
+  }
+
+  if (!bestMatch) bestMatch = suggestions[0];
+
+  return bestMatch;
+}
+
+const main = (e) => {
+  const query = e.target.textContent.toUpperCase();
+
+  if (query !== '') {
+    const find_start = new Date().getTime();
+
+    let parts = query.split(' ');
+
+    const wordToComplete = parts.pop();
+
+    rest = parts.join(' ') + ' ';
+
+    if (wordToComplete !== '') {
+      suggestion = getBestMatch(trie.complete(wordToComplete));
+
+      if (suggestion) {
+        $fakeDiv.innerText = query;
+
+        $span.style.left = r.left + $fakeDiv.clientWidth + 'px';
+
+        const ghost = suggestion.slice(wordToComplete.length);
+
+        trie.clear();
+
+        $span.textContent = ghost;
+
+        const find_end = new Date().getTime();
+
+        const execTime = find_end - find_start;
+
+        $time.textContent = `fetched in ${execTime}ms`;
+      }
+    } else {
+      $span.textContent = '';
+    }
+  } else {
+    $time.textContent = '';
+    $span.textContent = '';
+  }
+}
+
+init();
+
+const setEndOfContenteditable = (contentEditableElement) => {
+  let range, selection;
+  if (document.createRange) //Firefox, Chrome, Opera, Safari, IE 9+
+  {
+    range = document.createRange(); //Create a range (a range is a like the selection but invisible)
+    range.selectNodeContents(contentEditableElement); //Select the entire contents of the element with the range
+    range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+    selection = window.getSelection(); //get the selection object (allows you to change selection)
+    selection.removeAllRanges(); //remove any selections already made
+    selection.addRange(range); //make the range you have just created the visible selection
+  } else if (document.selection) //IE 8 and lower
+  {
+    range = document.body.createTextRange(); //Create a range (a range is a like the selection but invisible)
+    range.moveToElementText(contentEditableElement); //Select the entire contents of the element with the range
+    range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+    range.select(); //Select the range (make it the visible selection
+  }
+}
+
+$input.addEventListener('input', e => {
+  clearTimeout(INPUT_DEBOUNCE);
+  $span.textContent = '';
+
+  INPUT_DEBOUNCE = setTimeout(() => main(e), 250);
+});
+
+$input.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') {
+    $span.textContent = '';
+    $input.textContent = rest + suggestion;
+
+    setEndOfContenteditable($input);
+  } else if (e.key === 'Enter') {
+    $span.textContent = '';
+  }
+});
+
+
+
+function addRow(row){
+var actTable = document.getElementById("table");
+var rowsCount = actTable.rows.length;
+var tr = actTable.insertRow(rowsCount);
+tr = actTable.insertRow(rowsCount);
+
+for(var c = 0; c<3; c++) {
+  var td = document.createElement('td');
+  td = tr.insertCell(c);
+  td.setAttribute("contenteditable", "true");
+  if (c==0) {
+    if (row < 10){
+      td.appendChild(document.createTextNode("0"+String(row)));
+    } else {
+      td.appendChild(document.createTextNode(String(row)));
+    }
+
+  } else if (c==2) {
+    td.appendChild(document.createTextNode("50"))
+  }
+}
+}
+
+console.log(document.querySelectorAll("table"));
+
+var ro = 1;
+var ac = 1;
+document.querySelectorAll("table").forEach(function(element){
+  element.addEventListener("keydown", e => {
+    if (e.which === 9){
+      e.preventDefault();
+      ro++
+      addRow(ro);
+    } else if (e.which === 13){
+      e.preventDefault();
+      ac++
+      addAct(ac);
+    }
+
+  });
+});
+
+
+
+function addAct(act){
+  var actDiv = document.getElementById("act");
+  var headerUL =  document.createElement("div");
+  var header1 = document.createElement("h4");
+  header1.appendChild(document.createTextNode("Act 2"));
+  // header1.setAttribute("style","left: 19px; position: absolute; color:white; font-weight: bolder;");
+  headerUL.appendChild(header1);
+  var aTable = document.createElement("table");
+  aTable.setAttribute("id", "table");
+  // aTable.setAttribute("style", "width: 94%; position: absolute; left: 20px;");
+  var tr1 = document.createElement("tr");
+  var th1 = document.createElement("th");
+  th1.appendChild(document.createTextNode("No."));
+  th1.setAttribute("style","width: 72px;");
+  tr1.appendChild(th1);
+  tr1.appendChild(document.createElement("th").appendChild(document.createTextNode("MEDIA")));
+  tr1.appendChild(document.createElement("th").appendChild(document.createTextNode("SCRIPT")));
+
+  var tr2 = document.createElement("tr");
+  tr2.appendChild(document.createElement("td").appendChild(document.createTextNode("01")));
+  var td = document.createElement("td");
+  td.setAttribute("contenteditable", "true");
+  td.appendChild(document.createTextNode(" "));
+  tr2.appendChild(td);
+  tr2.appendChild(document.createElement("td").appendChild(document.createTextNode("50")));
+
+
+  aTable.appendChild(tr1);
+  aTable.appendChild(tr2);
+
+  actDiv.appendChild(headerUL);
+  actDiv.appendChild(aTable);
+
+
+}
+
+
+
+
+// document.getElementsByName("td").addEventListener('keydown', e => {
+//   if (e == 9) {
+//     e.preventDefault();
+//     addRow();
+//   }
+// })
+
+// var rowsCount = 1;
+// console.log(document.getElementsByClassName("input"));
+// document.getElementsByClassName("input")[rowsCount-1].addEventListener('keydown', e => {
+//   if (e.which === 9) {
+//     e.preventDefault();
+//     rowsCount++;
+//     document.getElementById("table").innerHTML += "<tr><td contenteditable='true'>0"+String(rowsCount)+"</td><td contenteditable='true' class='input'></td><td contenteditable='true'>50</td></tr>";
+//     console.log(document.getElementsByClassName("input")[rowsCount-1])
+//   }
+// });
+
+// var actsCount = 1;
+// document.getElementsByClassName("input")[rowsCount-1].addEventListener('keydown', e => {
+//   if (e.which === 13) {
+//     e.preventDefault();
+//     actsCount++;
+//     document.getElementById("act").innerHTML += "<h4>Act </h5><h4 contenteditable='true' style='left: 61px; top: 152px; position: absolute; color:white; font-weight: bolder;'>"+ String(actsCount) +"</h5><div id='table-div'><table style='width: 94%; top: 184px; position: absolute; left: 20px;'><thead><tr><th style='width: 72px;'>NO.</th><th>MEDIA</th><th>SCRIPT</th></tr></thead><tbody id='table'><tr><td contenteditable='true'>01</td><td contenteditable='true' id='input' class='input'></td><td contenteditable='true'>50</td></tr></tbody></table></div>"
+//     console.log(document.getElementsByClassName("input")[rowsCount-1])
+//   }
+// });
+
+</script>
+{% endblock %}
+{% block js %}
+<!--CSV-->
+<script src="{% static 'js/table2csv.min.js' %}"></script>
+<!--jspdf and canvas-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.min.js"></script>
+<script type="text/javascript" src="//cdn.rawgit.com/niklasvh/html2canvas/0.5.0-alpha2/dist/html2canvas.min.js"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    //display data from json file
+    $.ajax({
+      url:'/script/',
+      type:'get',
+      data:{
+      },
+      success:function(data){
+        var output;
+        var actRow;
+        a=data.obj1;
+        b=data.obj2;
+        c=data.obj3;
+        d=data.obj4;
+        var objects=[a,b,c,d]
+        //for act1,act2,act3, act4
+        for(i=0;i<objects.length;i++)
+        {
+          current_act=objects[i]
+          var actRow="<tr><td colspan='3' style='font-size:28px;' class='text-center'>Act "+(i+1)+"</td></tr>";
+          //for script, media,,,,
+          for(j=0;j<current_act.length;j++)
+          {
+            selected_obj=current_act[j]
+            console.log(selected_obj["script"])
+            console.log(selected_obj["media"])
+            //media
+            media_content=selected_obj["media"]
+              media_content_video=media_content["video"]
+                media_content_video_file1=media_content_video[0]
+                media_content_video_file2=media_content_video[1]
+              media_content_music=media_content["music"]
+              media_content_picture=media_content["picture"]
+                media_content_picture_file1=media_content_picture[0]
+                media_content_picture_file1=media_content_picture[1]
+              media_content_gfx=media_content["gfx"]
+              //script
+              script_content=selected_obj["script"]
+
+              if(j<=2)
+              {
+            output+="<tr><td contenteditable>"+(i+1)+".0"+(j+1)+"</td><td contenteditable><h4>Video</h4><p>"+
+                     media_content_video_file1["video-filename"]+"</p><p>"+media_content_video_file1["tc-in"]+"</p><p>"+media_content_video_file1["tc-out"]+"</p><h4>Music</h4><p>"+
+                     //media_content_video_file2 pending
+                     media_content_music["music-filename"]+"</p><p>"+media_content_music["tc-in"]+"</p><p>"+media_content_music["tc-out"]+"</p><h4>Picture</h4><p>"+
+                     //media_content_picture_file1 and file 2 pending
+                       "</p><h4>gfx</h4><p>"+media_content_gfx["graphics-filename"]+"</p><h4>Description</h4><p>"+
+                         media_content["description"]+"</td><td contenteditable><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
+                       "</p></td></tr>";
+              }
+              else{
+                output+="<tr><td contenteditable>"+(i+1)+".0"+(j+1)+"</td><td contenteditable><h4>Video</h4><p>"+
+                         media_content_video_file1["video-filename"]+"</p><p>"+media_content_video_file1["tc-in"]+"</p><p>"+media_content_video_file1["tc-out"]+"</p><h4>Music</h4><p>"+
+                         //media_content_video_file2 pending
+                         media_content_music["music-filename"]+"</p><p>"+media_content_music["tc-in"]+"</p><p>"+media_content_music["tc-out"]+"</p><h4>Picture</h4><p>"+
+                         //media_content_picture_file1 and file 2 pending
+                           "</p><h4>gfx</h4><p>"+media_content_gfx["graphics-filename"]+"</p><h4>Description</h4><p>"+
+                             media_content["description"]+"</td><td contenteditable id='lastTD'><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
+                           "</p></td></tr>";
+              }
+          }
+          total_output=actRow+=output;
+          $('#script-table').append(total_output);
+          output=0;
+          total_output=0;
+        }
+      },
+      failure:function(data){
+
+      },
+    });
+  });
+  //press tab to add a new row or double tab to add a new to table
+  var tabClick=0;
+  $('#table').on('focus', 'tr:last #lastTD', function(){
+  $(document).keydown(function(e){
+    var keycode=e.which;
+    if(keycode==9)
+    {
+      console.log("focus on last Row");
+      e.preventDefault();
+      tabClick++;
+      var time=setTimeout("addRowTable()",1000);
+    }
+});
+});
+function addRowTable()
+{
+  if(tabClick==1)
+  {
+      var add_newrow="<tr><td class='newTD' contenteditable>No</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+      $("#script-table").append(add_newrow);
+      $(".newTD").focus();
+      tabClick=0;
+  }
+  else if(tabClick==2)
+  {
+      var add_newtable="<br/><br/><table id='table' style='width: 94%; left: 20px;'> \
+                          <thead> \
+                            <tr>  \
+                              <th>NO.</th>  \
+                              <th>MEDIA</th> \
+                              <th>SCRIPT</th> \
+                            </tr>             \
+                          </thead>            \
+                          <tbody id='script-table'> \
+                            <tr>  \
+                              <td contenteditable='true'>01</td>  \
+                              <td contenteditable='true' class='input'></td>  \
+                              <td contenteditable='true'></td>  \
+                            </tr> \
+                          </tbody>  \
+                        </table>";
+      $("#table").append(add_newtable);
+      tabClick=0;
+  }
+}
+//for csv
+$("#csv").click(function(){
+  $("#table").table2csv()
+});
+</script>
+{% endblock %}

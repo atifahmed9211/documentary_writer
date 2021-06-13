@@ -1,0 +1,283 @@
+{% extends 'scriptingApp/main.html' %}
+
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway:200');
+
+
+#box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: right;
+  right:2px;
+  width: 700px;
+  height: 10000px;
+  color: white;
+  font-family: "Calibri";
+  font-size: 1.1rem;
+  margin: auto;
+  padding: 10px;
+  top: 15px;
+}
+#box2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: left;
+  left:2px;
+  width: 550px;
+  height: 1300px;
+  color: white;
+  font-family: "Calibri";
+  font-size: 1.1rem;
+  margin: auto;
+  padding: 10px;
+  top: 15px;
+
+}
+.gradient-border {
+  --borderWidth: 3px;
+  background: #1D1F20;
+  position: relative;
+  border-radius: var(--borderWidth);
+}
+.gradient-border:after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--borderWidth));
+  left: calc(-1 * var(--borderWidth));
+  height: calc(100% + var(--borderWidth) * 2);
+  width: calc(100% + var(--borderWidth) * 2);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+  border-radius: calc(2 * var(--borderWidth));
+  z-index: -1;
+  animation: animatedgradient 3s ease alternate infinite;
+  background-size: 300% 300%;
+}
+
+
+@keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+table, th, td {
+  table-layout: fixed;
+  border: 1px solid #586470;
+}
+
+</style>
+<div class="gradient-border" id="box">
+    <h1 contenteditable='true' style="left: 19px; top: 10px; position: absolute;">Shooting Script</h1>
+    <h5 style="left: 19px; top: 63px; position: absolute; color: #afafaf;">Project Title: </h5>
+    <h5 contenteditable='true' style="left: 127px; top: 63px; position: absolute; color: #afafaf;">My Documentry</h5>
+    <h5 style="left: 19px; top: 83px; position: absolute; color: #afafaf;">Duration:</h5>
+    <h5 contenteditable='true' style="left: 101px; top: 83px; position: absolute; color: #afafaf;">1 Hour</h5>
+    <h5 style="left: 19px; top: 105px; position: absolute; color: #afafaf;">TX Date: </h5>
+    <h5 contenteditable='true' style="left: 91px; top: 105px; position: absolute; color: #afafaf;">1 Jan 2021</h5>
+    <h4 style="left: 19px; top: 152px; position: absolute; color:white; font-weight: bolder;">Act </h5>
+    <h4 contenteditable='true' style="left: 61px; top: 152px; position: absolute; color:white; font-weight: bolder;">1</h5>
+
+      <table style="width: 94%; top: 184px; position: absolute; left: 20px;" id="script_main_table">
+        <thead>
+          <tr>
+            <th style="width: 72px;">NO.</th>
+            <th>MEDIA</th>
+            <th>SCRIPT</th>
+          </tr>
+        </thead>
+        <tbody id="script-table">
+          <tr id="select_script_file">
+            <td contenteditable='true'>01</td>
+            <td>
+              <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" id="script_file" name="scriptFile"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+              </form>
+            </td>
+            <td contenteditable='true'>50</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+<div class="gradient-border" id="box2">
+
+    <h2 style="position: absolute; top: 140px; font-size: 20px;">PLease select the SRT files</h2>
+    <table style="width: 50%; top: 184px; position: absolute; align-items:center;">
+      <thead>
+        <tr>
+          <th style="width: 500px;">TRANSCRIPT.</th>
+        </tr>
+      </thead>
+      <tbody id="transcript-table">
+        <tr >
+          <td>
+            <form action="" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" id="transcript_file"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>11:59 PM 05/05/2021
+
+{% endblock %}
+{% block js %}
+<script>
+  $(document).ready(function(){
+    $("#script_file").on('change',function(){
+      var formdata=new FormData();
+      formdata.append("scriptFile",$("#script_file")[0].files[0])
+      formdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+      //display data from json file
+      $.ajax({
+        url:'/script/',
+        type:'post',
+        processData:false,
+        contentType:false,
+        data:formdata,
+        success:function(data){
+            var output;
+            var actRow;
+            a=data.obj1;
+            b=data.obj2;
+            c=data.obj3;
+            d=data.obj4;
+            var objects=[a,b,c,d]
+            //for act1,act2,act3, act4
+            for(i=0;i<objects.length;i++)
+            {
+              current_act=objects[i]
+              var actRow="<tr><td colspan='3' style='font-size:28px;' class='text-center'>Act "+(i+1)+"</td></tr>";
+              //for script, media,,,,
+              for(j=0;j<current_act.length;j++)
+              {
+                selected_obj=current_act[j]
+                console.log(selected_obj["script"])
+                console.log(selected_obj["media"])
+                //media
+                media_content=selected_obj["media"]
+                  media_content_video=media_content["video"]
+                    media_content_video_file1=media_content_video[0]
+                    media_content_video_file2=media_content_video[1]
+                  media_content_music=media_content["music"]
+                  media_content_picture=media_content["picture"]
+                    media_content_picture_file1=media_content_picture[0]
+                    media_content_picture_file1=media_content_picture[1]
+                  media_content_gfx=media_content["gfx"]
+                  //script
+                  script_content=selected_obj["script"]
+
+                  if(j<=2)
+                  {
+                output+="<tr><td contenteditable>"+(i+1)+".0"+(j+1)+"</td><td contenteditable><h4>Video</h4><p>"+
+                         media_content_video_file1["video-filename"]+"</p><p>"+media_content_video_file1["tc-in"]+"</p><p>"+media_content_video_file1["tc-out"]+"</p><h4>Music</h4><p>"+
+                         //media_content_video_file2 pending
+                         media_content_music["music-filename"]+"</p><p>"+media_content_music["tc-in"]+"</p><p>"+media_content_music["tc-out"]+"</p><h4>Picture</h4><p>"+
+                         //media_content_picture_file1 and file 2 pending
+                           "</p><h4>gfx</h4><p>"+media_content_gfx["graphics-filename"]+"</p><h4>Description</h4><p>"+
+                             media_content["description"]+"</td><td contenteditable><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
+                           "</p></td></tr>";
+                  }
+                  else{
+                    output+="<tr><td contenteditable>"+(i+1)+".0"+(j+1)+"</td><td contenteditable><h4>Video</h4><p>"+
+                             media_content_video_file1["video-filename"]+"</p><p>"+media_content_video_file1["tc-in"]+"</p><p>"+media_content_video_file1["tc-out"]+"</p><h4>Music</h4><p>"+
+                             //media_content_video_file2 pending
+                             media_content_music["music-filename"]+"</p><p>"+media_content_music["tc-in"]+"</p><p>"+media_content_music["tc-out"]+"</p><h4>Picture</h4><p>"+
+                             //media_content_picture_file1 and file 2 pending
+                               "</p><h4>gfx</h4><p>"+media_content_gfx["graphics-filename"]+"</p><h4>Description</h4><p>"+
+                                 media_content["description"]+"</td><td contenteditable id='lastTD'><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
+                               "</p></td></tr>";
+                  }
+                }
+                $("#select_script_file").hide();
+                total_output=actRow+=output;
+                $('#script-table').append(total_output);
+                output=0;
+                total_output=0;
+            }
+        },
+        failure:function(data){
+
+        },
+      });
+    });
+    $("#transcript_file").on('change',function(){
+      var formdata=new FormData();
+      formdata.append("transcriptFile",$("#transcript_file")[0].files[0])
+      formdata.append("csrfmiddlewaretoken","{{csrf_token}}")
+      //display data from transcript file
+      $.ajax({
+        url:'/transcript/',
+        type:'post',
+        processData:false,
+        contentType:false,
+        data:formdata,
+        success:function(data){
+          console.log(data.transcript_text)
+          output="<tr><td contenteditable>"+data.transcript_text+"</td></tr>"
+          $("#transcript-table").html(output)
+        },
+        failure:function(data){
+
+        }
+    });
+  });
+});
+  //press tab to add a new row or double tab to add a new to table
+  var tabClick=0;
+  $('#script_main_table').on('focus', 'tr:last #lastTD', function(){
+  $(document).keydown(function(e){
+    var keycode=e.which;
+    if(keycode==9)
+    {
+      console.log("focus on last Row");
+      e.preventDefault();
+      tabClick++;
+      var time=setTimeout("addRowTable()",1000);
+    }
+});
+});
+function addRowTable()
+{
+  if(tabClick==1)
+  {
+      var add_newrow="<tr><td class='newTD' contenteditable>No</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+      $("#script-table").append(add_newrow);
+      $(".newTD").focus();
+      tabClick=0;
+  }
+  else if(tabClick==2)
+  {
+      var add_newtable="<br/><br/><table id='table' style='width: 94%; left: 20px;'> \
+                          <thead> \
+                            <tr>  \
+                              <th>NO.</th>  \
+                              <th>MEDIA</th> \
+                              <th>SCRIPT</th> \
+                            </tr>             \
+                          </thead>            \
+                          <tbody id='script-table'> \
+                            <tr>  \
+                              <td contenteditable='true'>01</td>  \
+                              <td contenteditable='true' class='input'></td>  \
+                              <td contenteditable='true'></td>  \
+                            </tr> \
+                          </tbody>  \
+                        </table>";
+      $("#script_main_table").append(add_newtable);
+      tabClick=0;
+  }
+}
+</script>
+{% endblock %}
