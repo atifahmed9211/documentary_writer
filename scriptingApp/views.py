@@ -23,14 +23,6 @@ def scripting(request):
         obj=json.loads(jsonData)
         print(obj['act1'])
         return JsonResponse({'obj1':obj["act1"],'obj2':obj["act2"],'obj3':obj["act3"],'obj4':obj["act4"]})
-    else:
-        # open json file
-        myJsonFile=open('static\jsonFiles\DocumentaryScriptTemplate.json','r')
-        jsonData=myJsonFile.read()
-        #parse
-        obj=json.loads(jsonData)
-        print(obj['act1'])
-        return JsonResponse({'obj1':obj["act1"],'obj2':obj["act2"],'obj3':obj["act3"],'obj4':obj["act4"]})
 
 def transcript(request):
     if request.method=="POST":
@@ -45,7 +37,6 @@ def transcript(request):
         file.close()
 
         text = ''
-        blank="\n"
         for line in lines:
             #text += ' ' + line.rstrip() + blank
             text += line

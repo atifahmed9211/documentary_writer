@@ -17,7 +17,9 @@
     body {
             background-color: rgb(56,56,56);
     }
-
+    #script_file_button{
+      color:white;
+    }
 
 
 /*BOX BORDER*/
@@ -118,7 +120,7 @@ table, th, td {
         <li class="nav-item active">
           <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="file" id="script_file_button" name="scriptFile" class="nav-link">
+            <input type="file" id="script_file_button" name="scriptFile" class="btn"></button>
           </form>
         </li>
         <li class="nav-item">

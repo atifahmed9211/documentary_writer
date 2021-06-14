@@ -49,6 +49,15 @@
       <button id="pdf" class="btn btn-info">To PDF</button>
       <!--<button id="txt" class="btn btn-primary">To TXT</button>-->
     </div>
+    <br/><br/>
+    <select id='script_type_value' style="position:absolute;top:100px;right:10px;display:none;">
+      <option value='Custom Script'>Custom Script</option>
+      <option value='VO'>VO</option>
+      <option value='SOT'>SOT</option>
+      <option value='BLACK'>BLACK</option>
+      <option value='OPENING TITLES'>OPENING TITLES</option>
+      <option value='CREDITS'>CREDITS</option>
+    </select>
     <div id="act">
     <h4 style="left: 19px; top: 152px; position: absolute; color:white; font-weight: bolder;" id="actNo">Act </h4>
     <h4 contenteditable='true' style="left: 61px; top: 152px; position: absolute; color:white; font-weight: bolder;">1</h4>
@@ -65,7 +74,7 @@
           <tr id="select_script_file">
             <td contenteditable='true'>01</td>
             <td contenteditable="true" class="input"></td>
-            <td contenteditable='true'></td>
+            <td contenteditable='true' class="lastTD"></td>
           </tr>
         </tbody>
       </table>
@@ -517,7 +526,7 @@ function addAct(act){
                          media_content_music["music-filename"]+"</p><p>"+media_content_music["tc-in"]+"</p><p>"+media_content_music["tc-out"]+"</p><h4>Picture</h4><p>"+
                          //media_content_picture_file1 and file 2 pending
                            "</p><h4>gfx</h4><p>"+media_content_gfx["graphics-filename"]+"</p><h4>Description</h4><p>"+
-                             media_content["description"]+"</td><td contenteditable id='lastTD'><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
+                             media_content["description"]+"</td><td contenteditable class='lastTD'><h4>Script</h4><p>"+script_content["script-type"]+"</p><p>"+script_content["script-data"]+"</p><p>"+script_content["profile_name"]+"</p><p>"+script_content["profile_title"]+"</p><p>"+script_content["profile_org"]+
                            "</p></td></tr>";
               }
           }
@@ -536,7 +545,7 @@ function addAct(act){
 });
   //press tab to add a new row or double tab to add a new to table
   var tabClick=0;
-  $('#table').on('focus', 'tr:last #lastTD', function(){
+  $('#table').on('focus', 'tr:last .lastTD', function(){
   $(document).keydown(function(e){
     var keycode=e.which;
     if(keycode==9)
@@ -552,11 +561,80 @@ function addRowTable()
 {
   if(tabClick==1)
   {
-      var add_newrow="<tr><td class='newTD' contenteditable>No</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
-      $("#script-table").append(add_newrow);
-      $(".newTD").focus();
-      tabClick=0;
-  }
+    //by default row
+    var add_newrow="<tr id='custom_script_row'><td class='newTD' contenteditable>No.</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+    $("#script-table").append(add_newrow);
+    $(".newTD").focus();
+    tabClick=0;
+    $("#script_type_value").show();
+    script_value=$("#script_type_value option:selected").val();
+    console.log(script_value);
+    $("#script_type_value").on('change',function(){
+      script_value=$("#script_type_value option:selected").val();
+      console.log(script_value);
+      if(script_value=="VO")
+      {
+        $("#custom_script_row").hide();
+        var add_newrow="<tr id='VO_script_row'><td class='newTD' contenteditable>VO</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        $("#script-table").append(add_newrow);
+        $(".newTD").focus();
+        tabClick=0;
+      }
+      else if(script_value=="SOT")
+      {
+        $("#custom_script_row").hide();
+        $("#VO_script_row").hide();
+        var add_newrow="<tr id='SOT_script_row'><td class='newTD' contenteditable>SOT</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        $("#script-table").append(add_newrow);
+        $(".newTD").focus();
+        tabClick=0;
+      }
+      else if(script_value=="BLACK")
+      {
+        $("#custom_script_row").hide();
+        $("#VO_script_row").hide();
+        $("#SOT_script_row").hide();
+        var add_newrow="<tr id='BLACK_script_row'><td class='newTD' contenteditable>BLACK</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        $("#script-table").append(add_newrow);
+        $(".newTD").focus();
+        tabClick=0;
+      }
+      else if(script_value=="OPENING TITLES")
+      {
+        $("#custom_script_row").hide();
+        $("#VO_script_row").hide();
+        $("#SOT_script_row").hide();
+        $("#BLACK_script_row").hide();
+        var add_newrow="<tr id='TITLES_script_row'><td class='newTD' contenteditable>OPENING TITLES</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        $("#script-table").append(add_newrow);
+        $(".newTD").focus();
+        tabClick=0;
+      }
+      else if(script_value=="CREDITS")
+      {
+        $("#custom_script_row").hide();
+        $("#VO_script_row").hide();
+        $("#SOT_script_row").hide();
+        $("#BLACK_script_row").hide();
+        $("#TITLES_script_row").hide();
+        var add_newrow="<tr id='CREDITS_script_row'><td class='newTD' contenteditable>CREDITS</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        $("#script-table").append(add_newrow);
+        $(".newTD").focus();
+        tabClick=0;
+      }
+      else
+      {
+        $("#VO_script_row").hide();
+        $("#SOT_script_row").hide();
+        $("#BLACK_script_row").hide();
+        $("#TITLES_script_row").hide();
+        $("#CREDITS_script_row").hide();
+        $("#custom_script_row").show();
+        $(".newTD").focus();
+        tabClick=0;
+      }
+    });
+    }
   else if(tabClick==2)
   {
       var add_newtable="<br/><br/><table id='table' style='width: 94%; left: 20px;'> \
