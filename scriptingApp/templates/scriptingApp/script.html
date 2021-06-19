@@ -43,26 +43,10 @@
     <h5 contenteditable='true' style="left: 101px; top: 83px; position: absolute; color: #afafaf;">1 Hour</h5>
     <h5 style="left: 19px; top: 105px; position: absolute; color: #afafaf;">TX Date: </h5>
     <h5 contenteditable='true' style="left: 91px; top: 105px; position: absolute; color: #afafaf;">1 Jan 2021</h5>
-    <div style="position:absolute;top: 30px;right:10px" >
-      <button id="csv" class="btn btn-danger">To CSV</button>
-      <!--<button id="json" class="btn btn-success">To JSON</button>-->
-      <button id="pdf" class="btn btn-info">To PDF</button>
-      <!--<button id="txt" class="btn btn-primary">To TXT</button>-->
-    </div>
     <br/><br/>
-    <select id='script_type_value' style="position:absolute;top:100px;right:10px;display:none;">
-      <option value='Custom Script'>Custom Script</option>
-      <option value='VO'>VO</option>
-      <option value='SOT'>SOT</option>
-      <option value='BLACK'>BLACK</option>
-      <option value='OPENING TITLES'>OPENING TITLES</option>
-      <option value='CREDITS'>CREDITS</option>
-    </select>
-    <div id="act">
-    <h4 style="left: 19px; top: 152px; position: absolute; color:white; font-weight: bolder;" id="actNo">Act </h4>
-    <h4 contenteditable='true' style="left: 61px; top: 152px; position: absolute; color:white; font-weight: bolder;">1</h4>
-    <div id="table-div" class="form">
-      <table id="table" style="width: 94%; top: 184px; position: absolute; left: 20px;">
+    <div id="table-div" style="width: 94%; top: 184px; position: absolute; left: 20px;">
+      <h4 style="color:white; font-weight: bolder;" id="actNo">Act <span contenteditable>1</span></h4>
+      <table id="table" width="100%">
         <thead>
           <tr>
             <th>NO.</th>
@@ -72,8 +56,8 @@
         </thead>
         <tbody id="script-table">
           <tr id="select_script_file">
-            <td contenteditable='true'>01</td>
-            <td contenteditable="true" class="input"></td>
+            <td contenteditable='true'>1</td>
+            <td contenteditable="true"></td>
             <td contenteditable='true' class="lastTD"></td>
           </tr>
         </tbody>
@@ -557,16 +541,17 @@ function addAct(act){
     }
 });
 });
+var tableCount=1,rowCount=1;
 function addRowTable()
 {
   if(tabClick==1)
   {
+    rowCount++;
     //by default row
-    var add_newrow="<tr id='custom_script_row'><td class='newTD' contenteditable>No.</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+    var add_newrow="<tr id='custom_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable></td></tr>";
     $("#script-table").append(add_newrow);
     $(".newTD").focus();
     tabClick=0;
-    $("#script_type_value").show();
     script_value=$("#script_type_value option:selected").val();
     console.log(script_value);
     $("#script_type_value").on('change',function(){
@@ -575,7 +560,7 @@ function addRowTable()
       if(script_value=="VO")
       {
         $("#custom_script_row").hide();
-        var add_newrow="<tr id='VO_script_row'><td class='newTD' contenteditable>VO</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        var add_newrow="<tr id='VO_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable>VO</td></tr>";
         $("#script-table").append(add_newrow);
         $(".newTD").focus();
         tabClick=0;
@@ -584,7 +569,7 @@ function addRowTable()
       {
         $("#custom_script_row").hide();
         $("#VO_script_row").hide();
-        var add_newrow="<tr id='SOT_script_row'><td class='newTD' contenteditable>SOT</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        var add_newrow="<tr id='SOT_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable>SOT</td></tr>";
         $("#script-table").append(add_newrow);
         $(".newTD").focus();
         tabClick=0;
@@ -594,7 +579,7 @@ function addRowTable()
         $("#custom_script_row").hide();
         $("#VO_script_row").hide();
         $("#SOT_script_row").hide();
-        var add_newrow="<tr id='BLACK_script_row'><td class='newTD' contenteditable>BLACK</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        var add_newrow="<tr id='BLACK_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable>BLACK</td></tr>";
         $("#script-table").append(add_newrow);
         $(".newTD").focus();
         tabClick=0;
@@ -605,7 +590,7 @@ function addRowTable()
         $("#VO_script_row").hide();
         $("#SOT_script_row").hide();
         $("#BLACK_script_row").hide();
-        var add_newrow="<tr id='TITLES_script_row'><td class='newTD' contenteditable>OPENING TITLES</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        var add_newrow="<tr id='TITLES_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable>OPENING TITLES</td></tr>";
         $("#script-table").append(add_newrow);
         $(".newTD").focus();
         tabClick=0;
@@ -617,7 +602,7 @@ function addRowTable()
         $("#SOT_script_row").hide();
         $("#BLACK_script_row").hide();
         $("#TITLES_script_row").hide();
-        var add_newrow="<tr id='CREDITS_script_row'><td class='newTD' contenteditable>CREDITS</td><td contenteditable>Media</td><td contenteditable>Script</td></tr>";
+        var add_newrow="<tr id='CREDITS_script_row'><td class='newTD' contenteditable>"+rowCount+"</td><td contenteditable></td><td contenteditable>CREDITS</td></tr>";
         $("#script-table").append(add_newrow);
         $(".newTD").focus();
         tabClick=0;
@@ -637,24 +622,26 @@ function addRowTable()
     }
   else if(tabClick==2)
   {
-      var add_newtable="<br/><br/><table id='table' style='width: 94%; left: 20px;'> \
-                          <thead> \
-                            <tr>  \
-                              <th>NO.</th>  \
-                              <th>MEDIA</th> \
-                              <th>SCRIPT</th> \
-                            </tr>             \
-                          </thead>            \
-                          <tbody id='script-table'> \
-                            <tr>  \
-                              <td contenteditable='true'>01</td>  \
-                              <td contenteditable='true' class='input'></td>  \
-                              <td contenteditable='true'></td>  \
-                            </tr> \
-                          </tbody>  \
-                        </table>";
-      $("#table").append(add_newtable);
-      tabClick=0;
+      tableCount++;
+      var add_newtable="<br/><br/><h4 style='color:white; font-weight: bolder;' id='actNo'>Act <span contenteditable>"+tableCount+"</span></h4> \
+                                  <table id='table' width='100%'> \
+                                    <thead> \
+                                      <tr>  \
+                                        <th>NO.</th>  \
+                                        <th>MEDIA</th> \
+                                        <th>SCRIPT</th> \
+                                      </tr>             \
+                                    </thead>            \
+                                    <tbody id='script-table'> \
+                                      <tr>  \
+                                        <td contenteditable='true'>01</td>  \
+                                        <td contenteditable='true' class='input'></td>  \
+                                        <td contenteditable='true'></td>  \
+                                      </tr> \
+                                    </tbody>  \
+                                  </table>";
+                                  $("#table-div").append(add_newtable);
+                                  tabClick=0;
   }
 }
 //for csv
