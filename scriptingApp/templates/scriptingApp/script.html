@@ -467,123 +467,68 @@ function addAct(act){
     first_phase_SOT=true;
     first_phase_BLACK=true;
     first_phase_OPENING_TITLES=true;
-    first_phase_CREDITS=true;
     $("#script_type_value").on('change',function(){
       script_value=$("#script_type_value option:selected").val();
       console.log(script_value);
       if(script_value=="VO")
       {
-        if(first_phase_VO)
-        {
-          $("#row_1_table_1").hide();
+          $("#row_1_table_1").remove();
+          $("#SOT_script_row").remove();
+          $("#BLACK_script_row").remove();
+          $("#TITLES_script_row").remove();
+          $("#CREDITS_script_row").remove();
           var add_newrow="<tr id='VO_script_row'><td class='newTD_vo' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'  class='lastTD'>VO</td></tr>";
           $("#script-table").append(add_newrow);
-          first_phase_VO=false;
-        }
-        else
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").show();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").hide();
-          $("#TITLES_script_row").hide();
-          $("#CREDITS_script_row").hide();
-        }
       }
       else if(script_value=="SOT")
       {
-        if(first_phase_SOT)
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
+          $("#row_1_table_1").remove();
+          $("#VO_script_row").remove();
+          $("#BLACK_script_row").remove();
+          $("#TITLES_script_row").remove();
+          $("#CREDITS_script_row").remove();
           var add_newrow="<tr id='SOT_script_row'><td class='newTD_sot' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>SOT</td></tr>";
           $("#script-table").append(add_newrow);
-          first_phase_SOT=false;
-        }
-        else
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").show();
-          $("#BLACK_script_row").hide();
-          $("#TITLES_script_row").hide();
-          $("#CREDITS_script_row").hide();
-        }
       }
       else if(script_value=="BLACK")
       {
-        if(first_phase_BLACK)
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
+          $("#row_1_table_1").remove();
+          $("#VO_script_row").remove();
+          $("#SOT_script_row").remove();
+          $("#TITLES_script_row").remove();
+          $("#CREDITS_script_row").remove();
           var add_newrow="<tr id='BLACK_script_row'><td class='newTD_black' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>BLACK</td></tr>";
           $("#script-table").append(add_newrow);
-          first_phase_BLACK=false;
-        }
-        else
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").show();
-          $("#TITLES_script_row").hide();
-          $("#CREDITS_script_row").hide();
-        }
       }
       else if(script_value=="OPENING TITLES")
       {
-        if(first_phase_OPENING_TITLES)
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").hide();
+          $("#row_1_table_1").remove();
+          $("#VO_script_row").remove();
+          $("#SOT_script_row").remove();
+          $("#BLACK_script_row").remove();
+          $("#CREDITS_script_row").remove();
           var add_newrow="<tr id='TITLES_script_row'><td class='newTD_titles' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>OPENING TITLES</td></tr>";
           $("#script-table").append(add_newrow);
-          first_phase_OPENING_TITLES=false;
-        }
-        else
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").hide();
-          $("#TITLES_script_row").show();
-          $("#CREDITS_script_row").hide();
-        }
       }
       else if(script_value=="CREDITS")
       {
-        if(first_phase_CREDITS)
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").hide();
-          $("#TITLES_script_row").hide();
+          $("#row_1_table_1").remove();
+          $("#VO_script_row").remove();
+          $("#SOT_script_row").remove();
+          $("#BLACK_script_row").remove();
+          $("#TITLES_script_row").remove();
           var add_newrow="<tr id='CREDITS_script_row'><td class='newTD_credits' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>CREDITS</td></tr>";
           $("#script-table").append(add_newrow);
-          first_phase_CREDITS=false;
-        }
-        else
-        {
-          $("#row_1_table_1").hide();
-          $("#VO_script_row").hide();
-          $("#SOT_script_row").hide();
-          $("#BLACK_script_row").hide();
-          $("#TITLES_script_row").hide();
-          $("#CREDITS_script_row").show();
-        }
       }
       else
       {
-        $("#VO_script_row").hide();
-        $("#SOT_script_row").hide();
-        $("#BLACK_script_row").hide();
-        $("#TITLES_script_row").hide();
-        $("#CREDITS_script_row").hide();
-        $("#row_1_table_1").show();
+        $("#VO_script_row").remove();
+        $("#SOT_script_row").remove();
+        $("#BLACK_script_row").remove();
+        $("#TITLES_script_row").remove();
+        $("#CREDITS_script_row").remove();
+        var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
+        $("#script-table").append(add_newrow);
       }
     });
     //press tab to add a new row or double tab to add a new to table
