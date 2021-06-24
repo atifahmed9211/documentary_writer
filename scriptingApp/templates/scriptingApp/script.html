@@ -51,7 +51,7 @@ down menu use kar sakta ha,,-->
     <br/><br/>
     <div id="table-div" style="width: 94%; top: 184px; position: absolute; left: 20px;">
       <h4 style="color:white; font-weight: bolder;" id="actNo">Act <span contenteditable>1</span></h4>
-      <table id="table_1" width="100%">
+      <table id="table_1" width="100%" class="form">
         <thead>
           <tr>
             <th>NO.</th>
@@ -461,77 +461,79 @@ function addAct(act){
     $("#script-table").append(add_newrow);
     $(".newTD").focus();
     //if user changes row type
-    script_value=$("#script_type_value option:selected").val();
-    console.log(script_value);
-    first_phase_VO=true;
-    first_phase_SOT=true;
-    first_phase_BLACK=true;
-    first_phase_OPENING_TITLES=true;
-    $("#script_type_value").on('change',function(){
+    if(obj.rowCount==1 && obj.tabClick==0)
+    {
       script_value=$("#script_type_value option:selected").val();
       console.log(script_value);
-      if(script_value=="VO")
-      {
-          $("#row_1_table_1").remove();
-          $("#SOT_script_row").remove();
-          $("#BLACK_script_row").remove();
-          $("#TITLES_script_row").remove();
-          $("#CREDITS_script_row").remove();
-          var add_newrow="<tr id='VO_script_row'><td class='newTD_vo' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'  class='lastTD'>VO</td></tr>";
-          $("#script-table").append(add_newrow);
-      }
-      else if(script_value=="SOT")
-      {
-          $("#row_1_table_1").remove();
-          $("#VO_script_row").remove();
-          $("#BLACK_script_row").remove();
-          $("#TITLES_script_row").remove();
-          $("#CREDITS_script_row").remove();
-          var add_newrow="<tr id='SOT_script_row'><td class='newTD_sot' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>SOT</td></tr>";
-          $("#script-table").append(add_newrow);
-      }
-      else if(script_value=="BLACK")
-      {
-          $("#row_1_table_1").remove();
-          $("#VO_script_row").remove();
-          $("#SOT_script_row").remove();
-          $("#TITLES_script_row").remove();
-          $("#CREDITS_script_row").remove();
-          var add_newrow="<tr id='BLACK_script_row'><td class='newTD_black' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>BLACK</td></tr>";
-          $("#script-table").append(add_newrow);
-      }
-      else if(script_value=="OPENING TITLES")
-      {
-          $("#row_1_table_1").remove();
-          $("#VO_script_row").remove();
-          $("#SOT_script_row").remove();
-          $("#BLACK_script_row").remove();
-          $("#CREDITS_script_row").remove();
-          var add_newrow="<tr id='TITLES_script_row'><td class='newTD_titles' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>OPENING TITLES</td></tr>";
-          $("#script-table").append(add_newrow);
-      }
-      else if(script_value=="CREDITS")
-      {
-          $("#row_1_table_1").remove();
-          $("#VO_script_row").remove();
-          $("#SOT_script_row").remove();
-          $("#BLACK_script_row").remove();
-          $("#TITLES_script_row").remove();
-          var add_newrow="<tr id='CREDITS_script_row'><td class='newTD_credits' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>CREDITS</td></tr>";
-          $("#script-table").append(add_newrow);
-      }
-      else
-      {
-        $("#VO_script_row").remove();
-        $("#SOT_script_row").remove();
-        $("#BLACK_script_row").remove();
-        $("#TITLES_script_row").remove();
-        $("#CREDITS_script_row").remove();
-        var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
-        $("#script-table").append(add_newrow);
-      }
-    });
-    //press tab to add a new row or double tab to add a new to table
+      $("#script_type_value").on('change',function(){
+        script_value=$("#script_type_value option:selected").val();
+        console.log(script_value);
+        if(script_value=="VO" && obj.rowCount==1)
+        {
+            $("#row_1_table_1").remove();
+            $("#SOT_script_row").remove();
+            $("#BLACK_script_row").remove();
+            $("#TITLES_script_row").remove();
+            $("#CREDITS_script_row").remove();
+            var add_newrow="<tr id='VO_script_row'><td class='newTD_vo' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'  class='lastTD'>VO</td></tr>";
+            $("#script-table").append(add_newrow);
+        }
+        else if(script_value=="SOT" && obj.rowCount==1)
+        {
+            $("#row_1_table_1").remove();
+            $("#VO_script_row").remove();
+            $("#BLACK_script_row").remove();
+            $("#TITLES_script_row").remove();
+            $("#CREDITS_script_row").remove();
+            var add_newrow="<tr id='SOT_script_row'><td class='newTD_sot' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>SOT</td></tr>";
+            $("#script-table").append(add_newrow);
+        }
+        else if(script_value=="BLACK" && obj.rowCount==1)
+        {
+            $("#row_1_table_1").remove();
+            $("#VO_script_row").remove();
+            $("#SOT_script_row").remove();
+            $("#TITLES_script_row").remove();
+            $("#CREDITS_script_row").remove();
+            var add_newrow="<tr id='BLACK_script_row'><td class='newTD_black' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>BLACK</td></tr>";
+            $("#script-table").append(add_newrow);
+        }
+        else if(script_value=="OPENING TITLES" && obj.rowCount==1)
+        {
+            $("#row_1_table_1").remove();
+            $("#VO_script_row").remove();
+            $("#SOT_script_row").remove();
+            $("#BLACK_script_row").remove();
+            $("#CREDITS_script_row").remove();
+            var add_newrow="<tr id='TITLES_script_row'><td class='newTD_titles' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>OPENING TITLES</td></tr>";
+            $("#script-table").append(add_newrow);
+        }
+        else if(script_value=="CREDITS" && obj.rowCount==1)
+        {
+            $("#row_1_table_1").remove();
+            $("#VO_script_row").remove();
+            $("#SOT_script_row").remove();
+            $("#BLACK_script_row").remove();
+            $("#TITLES_script_row").remove();
+            var add_newrow="<tr id='CREDITS_script_row'><td class='newTD_credits' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'>CREDITS</td></tr>";
+            $("#script-table").append(add_newrow);
+        }
+        else
+        {
+          if(obj.rowCount==1)
+          {
+            $("#VO_script_row").remove();
+            $("#SOT_script_row").remove();
+            $("#BLACK_script_row").remove();
+            $("#TITLES_script_row").remove();
+            $("#CREDITS_script_row").remove();
+            var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
+            $("#script-table").append(add_newrow);
+          }
+        }
+      });
+    }
+    //press tab to add a new row or double tab to add a new table
     $('table').on('focus', 'tr:last .lastTD', function(){
       //user ne currently kis table par focus kiya ha,,
     $(":focus").each(function() {
