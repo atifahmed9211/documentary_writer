@@ -13,6 +13,7 @@ function addRowTable(obj)
     //if user changes row type
     script_value=$("#script_type_value option:selected").val();
     console.log(script_value);
+    $("#script_type_value").unbind('change');
     $("#script_type_value").on('change',function(){
       script_value=$("#script_type_value option:selected").val();
       console.log(script_value);

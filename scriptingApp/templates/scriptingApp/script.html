@@ -450,6 +450,10 @@ function addAct(act){
 </script>
 {% endblock %}
 {% block js %}
+<!-- jquery ui-->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--jquery css link-->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <!--CSV-->
 <script src="{% static 'js/table2csv.min.js' %}"></script>
 <!--jspdf and canvas-->
@@ -458,15 +462,15 @@ function addAct(act){
 <script src="{% static 'js/script.js' %}"></script>
 <script src="{% static 'js/atif.js' %}"></script>
 <script>
+  var obj={
+    tabClick:0,
+    rowCount:1,
+    tableCount:1,
+    focussed_table:table_1,
+  };
   $(document).ready(function(){
-    var obj={
-      tabClick:0,
-      rowCount:1,
-      tableCount:1,
-      focussed_table:table_1,
-    };
     //to add first row in first table
-    var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
+    var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable id='media_text'></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
     $("#script-table").append(add_newrow);
     $(".newTD").focus();
     //if user changes row type
@@ -643,5 +647,16 @@ $("#csv").click(function(){
   $("#table_1").table2csv()
 });
 });
+  $( function() {
+    var availableTags = [
+      "Description",
+      "Video",
+      "Picture",
+      "Music",
+    ];
+$( "#media_text" ).autocomplete({
+      source: availableTags
+    });
+    });
 </script>
 {% endblock %}
