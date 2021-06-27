@@ -1,5 +1,6 @@
 {% extends 'scriptingApp/main.html' %}
 
+
 {% block content %}
 {% load static %}
 <!--ham row add karne ke lye ak mechanism ko follow karte ha,
@@ -39,6 +40,8 @@ down menu use kar sakta ha,,-->
     text-decoration: underline;
     letter-spacing: 0.5px; */
   /* } */
+  {%block transcript_style%}
+  {%endblock%}
   table{
     table-layout: fixed;
     width: 100%;
@@ -64,6 +67,9 @@ th, td {
         <thead>
           <tr>
             <th>NO.</th>
+            <th style="display:none">AX</th>
+            <th style="display:none">AA/V</th>
+            <th style="display:none">C</th>
             <th>MEDIA</th>
             <th>SCRIPT</th>
           </tr>
@@ -72,6 +78,10 @@ th, td {
         </tbody>
       </table>
     </div>
+  </div>
+  <div class="gradient-border" id="box2">
+    {% block transcript %}
+    {% endblock %}
   </div>
 <!-- <script type="text/javascript" src="{% static 'script.js' %}" ></script> -->
 <script>
@@ -470,7 +480,13 @@ function addAct(act){
   };
   $(document).ready(function(){
     //to add first row in first table
-    var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td contenteditable id='media_text'></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
+    var add_newrow="<tr id='row_1_table_1'><td class='newTD' contenteditable>"+obj.rowCount+"</td><td style='display:none'>AX</td><td style='display:none'>AA/V</td><td style='display:none'>C</td><td contenteditable id='#'>Description:<br/>Picture:<form action='' method='post' enctype='multipart/form-data'> \
+      <input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+      </form><br/>video:<form action='' method='post' enctype='multipart/form-data'> \
+        <input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+        </form><br/><br/>Audio:<form action='' method='post' enctype='multipart/form-data'> \
+          <input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+          </form><br/></td><td contenteditable id='table_"+obj.tableCount+"_lastTD' class='lastTD'></td></tr>";
     $("#script-table").append(add_newrow);
     $(".newTD").focus();
     //if user changes row type
@@ -647,16 +663,7 @@ $("#csv").click(function(){
   $("#table_1").table2csv()
 });
 });
-  $( function() {
-    var availableTags = [
-      "Description",
-      "Video",
-      "Picture",
-      "Music",
-    ];
-$( "#media_text" ).autocomplete({
-      source: availableTags
-    });
-    });
 </script>
+{% endblock %}
+{% block transcript_js %}
 {% endblock %}
