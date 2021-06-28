@@ -5,95 +5,20 @@ function addRowTable(obj)
   {
     obj.rowCount++;
     //by default row
-    var add_newrow="<tr id='custom_script_row_"+obj.rowCount+"'><td class='newTD_custom_script' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'></td></tr>";
+    var add_newrow="<tr id='custom_script_row_"+obj.rowCount+"'><td class='newTD_custom_script' contenteditable>"+obj.rowCount+"</td><td contenteditable>Description:<br/>Picture:<form action='' method='post' enctype='multipart/form-data'> \
+      <input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+      <br/>video:<input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+      <br/>Audio:<input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+          </form></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'></td></tr>";
     $("#"+(obj.focussed_table)).append(add_newrow);
     console.log(obj.focussed_table);
     $(".newTD_custom_script").focus();
     obj.tabClick=0;
-    //if user changes row type
-    script_value=$("#script_type_value option:selected").val();
-    console.log(script_value);
-    $("#script_type_value").unbind('change');
-    $("#script_type_value").on('change',function(){
-      script_value=$("#script_type_value option:selected").val();
-      console.log(script_value);
-      if(script_value=="VO")
-      {
-          $("#custom_script_row_"+obj.rowCount).remove();
-          $("#SOT_script_row_"+obj.rowCount).remove();
-          $("#BLACK_script_row_"+obj.rowCount).remove();
-          $("#TITLES_script_row_"+obj.rowCount).remove();
-          $("#CREDITS_script_row_"+obj.rowCount).remove();
-          var add_newrow="<tr id='VO_script_row_"+obj.rowCount+"'><td class='newTD_vo' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'  class='lastTD'>VO</td></tr>";
-          $("#"+(obj.focussed_table)).append(add_newrow);
-          $(".newTD_vo").focus();
-          obj.tabClick=0;
-      }
-      else if(script_value=="SOT")
-      {
-          $("#custom_script_row_"+obj.rowCount).remove();
-          $("#VO_script_row_"+obj.rowCount).remove();
-          $("#BLACK_script_row_"+obj.rowCount).remove();
-          $("#TITLES_script_row_"+obj.rowCount).remove();
-          $("#CREDITS_script_row_"+obj.rowCount).remove();
-          var add_newrow="<tr id='SOT_script_row_"+obj.rowCount+"'><td class='newTD_sot' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'>SOT</td></tr>";
-          $("#"+(obj.focussed_table)).append(add_newrow);
-          $(".newTD_sot").focus();
-          obj.tabClick=0;
-      }
-      else if(script_value=="BLACK")
-      {
-          $("#custom_script_row_"+obj.rowCount).remove();
-          $("#VO_script_row_"+obj.rowCount).remove();
-          $("#SOT_script_row_"+obj.rowCount).remove();
-          $("#TITLES_script_row_"+obj.rowCount).remove();
-          $("#CREDITS_script_row_"+obj.rowCount).remove();
-          var add_newrow="<tr id='BLACK_script_row_"+obj.rowCount+"'><td class='newTD_black' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'>BLACK</td></tr>";
-          $("#"+(obj.focussed_table)).append(add_newrow);
-          $(".newTD_black").focus();
-          obj.tabClick=0;
-      }
-      else if(script_value=="OPENING TITLES")
-      {
-          $("#custom_script_row_"+obj.rowCount).remove();
-          $("#VO_script_row_"+obj.rowCount).remove();
-          $("#SOT_script_row_"+obj.rowCount).remove();
-          $("#BLACK_script_row_"+obj.rowCount).remove();
-          $("#CREDITS_script_row_"+obj.rowCount).remove();
-          var add_newrow="<tr id='TITLES_script_row_"+obj.rowCount+"'><td class='newTD_titles' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'>OPENING TITLES</td></tr>";
-          $("#"+(obj.focussed_table)).append(add_newrow);
-          $(".newTD_titles").focus();
-          obj.tabClick=0;
-      }
-      else if(script_value=="CREDITS")
-      {
-          $("#custom_script_row_"+obj.rowCount).remove();
-          $("#VO_script_row_"+obj.rowCount).remove();
-          $("#SOT_script_row_"+obj.rowCount).remove();
-          $("#BLACK_script_row_"+obj.rowCount).remove();
-          $("#TITLES_script_row_"+obj.rowCount).remove();
-          var add_newrow="<tr id='CREDITS_script_row_"+obj.rowCount+"'><td class='newTD_credits' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD'>CREDITS</td></tr>";
-          $("#"+(obj.focussed_table)).append(add_newrow);
-          $(".newTD_credits").focus();
-          obj.tabClick=0;
-      }
-      else
-      {
-        $("#VO_script_row_"+obj.rowCount).remove();
-        $("#SOT_script_row_"+obj.rowCount).remove();
-        $("#BLACK_script_row_"+obj.rowCount).remove();
-        $("#TITLES_script_row_"+obj.rowCount).remove();
-        $("#CREDITS_script_row_"+obj.rowCount).remove();
-        var add_newrow="<tr id='custom_script_row_"+obj.rowCount+"'><td class='newTD_custom_script' contenteditable>"+obj.rowCount+"</td><td contenteditable></td><td contenteditable id='table_"+obj.tableCount+"lastTD' class='lastTD'></td></tr>";
-        $("#"+(obj.focussed_table)).append(add_newrow);
-        console.log(obj.focussed_table);
-        $(".newTD").focus();
-        obj.tabClick=0;
-      }
-    });
-    }
-  else if(obj.tabClick==2)
+  }
+  else
   {
+    if(obj.tabClick==2)
+    {
       obj.tableCount++;
       var add_newtable="<br/><br/><h4 style='color:white; font-weight: bolder;' id='actNo'>Act <span contenteditable>"+obj.tableCount+"</span></h4> \
                                   <table id='table_"+obj.tableCount+"' width='100%'> \
@@ -107,7 +32,11 @@ function addRowTable(obj)
                                     <tbody id='script-table'> \
                                       <tr>  \
                                         <td contenteditable='true' class='newTD'>1</td>  \
-                                        <td contenteditable='true' class='input'></td>  \
+                                        <td contenteditable='true' class='input'>Description:<br/>Picture:<form action='' method='post' enctype='multipart/form-data'> \
+                                          <input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+                                          <br/>video:<input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+                                          <br/>Audio:<input type='file' id='script_file' name='scriptFile'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> \
+                                              </form></td>  \
                                         <td contenteditable='true' class='lastTD'></td>  \
                                       </tr> \
                                     </tbody>  \
@@ -118,5 +47,6 @@ function addRowTable(obj)
                                   $('*').blur();
                                   $(".newTD").focus();
                                   obj.focussed_table="table_"+obj.tableCount;
+    }
   }
 }
