@@ -588,6 +588,19 @@ $("#csv").click(function(){
   $("#table_1").table2csv()
 });
 });
+//vo,sot,,,,
+$( function() {
+  var availableTags = [
+    "VO",
+    "SOT",
+    "OPENING TITLES",
+    "BLACK",
+    "CREDITS",
+  ];
+  $("#table_"+obj.tableCount+"_lastTD").autocomplete({
+        source:availableTags
+      });
+  });
 </script>
 {% endblock %}
 {% block transcript_js %}
